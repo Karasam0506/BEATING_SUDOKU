@@ -38,7 +38,6 @@ def print_lines(line_number: 0):
     -------
         Print da linha do tabuleiro de SUDOKU.
     """
-    global tabuleiro
     generator= (f"{item} │" for item in tabuleiro[line_number,].tolist()[0])
     result_string = ' '.join(generator)
     print(f'│ {result_string}')
@@ -115,7 +114,7 @@ def colunas(ind_two: int, tip = 'L', tabuleiro = tabuleiro)-> list:
 
 
 
-def pre_setor(ind_tree: int, tabuleiro) -> list:
+def pre_setor(ind_tree: int) -> list:
     """Cria os limites do setor 3x3 contido dentro da matriz 9x9
     ...
     
@@ -195,7 +194,9 @@ def resolver_cell(tabuleiro = tabuleiro)-> None:
                 elif len(filtering(validation)) == 1:
                     tabuleiro[ind:ind+1 , ind_two:ind_two+1] = filtering(validation)[0];print('conjunto')
 
-def resolver_setor(value= None, tabuleiro = tabuleiro):
+ind = 8
+ind_two = 1
+def resolver_setor( tabuleiro = tabuleiro):
     """Atualiza a informação no tabuleiro, passa por todas as células da matriz 
     verifica-se na coluna/linha/setor e o conjunto de todos com a lista de variáveis aceitáveis.
     ...
@@ -207,11 +208,7 @@ def resolver_setor(value= None, tabuleiro = tabuleiro):
     for ind in range(0,9,3):
         for ind_two in range(0,9,3):
             setor_objeto = setor(ind, ind_two, tabuleiro= tabuleiro)
-            if(value == None):
-                resto = filtering(setor_objeto)
-            elif( value in filtering(setor_objeto)):
-                resto = [value]
-            else: break
+            resto = filtering(setor_objeto)
             for i in resto:
                 sem_linhas , sem_coluns = np.where(tabuleiro == i)
                 linhas_setor = pre_setor(ind)[0:3]
@@ -227,10 +224,22 @@ def resolver_setor(value= None, tabuleiro = tabuleiro):
                         if i not in setor_objeto:
                             tabuleiro[inputer[0]] = i;#print(f'alterado{( inputer[0][0], inputer[0][1])}')
 
-value = 1
+value = 5
 def listagem_numbers(value:0, setor) -> list:
     possiveis_possicoes = np.where(setor == value)
     return list(zip(possiveis_possicoes[0],possiveis_possicoes[1]))
+
+
+def pre_cadeia(tabuleiro= tabuleiro, value = 1):
+    for ind in range(0,9,3):
+        for ind_two in range(0,9,3):
+            setor_objeto = setor(ind, ind_two, tabuleiro = tabuleiro)
+            resto = filtering(setor_objeto)
+            if value in resto and 1/len(resto) == 0.5:
+                posicoes = listagem_numbers(setor = setor_objeto, value= 0 )
+                tabuleiro[posicoes[0][0]+ ind, posicoes[0][1]+ ind_two ] = i
+
+
 
 def cadeia_forcada(tabuleiro = tabuleiro):
     for ind in range(0,9,3):
@@ -247,9 +256,15 @@ def cadeia_forcada(tabuleiro = tabuleiro):
                         print(clone)
                         clone[posicoes[counter][0]+ ind,posicoes[counter][1]+ ind_two ] = i
                         print(clone)
-                        resolver_setor(tabuleiro=clone, value = i)
-                        resolver_setor(tabuleiro=clone, value = i)
-                        resolver_setor(tabuleiro=clone, value = i)
+                        resolver_setor(tabuleiro=clone)
+                        resolver_cell(tabuleiro = clone)
+                        pre_cadeia(tabuleiro=clone, value = i)
+                        resolver_setor(tabuleiro=clone)
+                        resolver_cell(tabuleiro = clone)
+                        pre_cadeia(tabuleiro=clone, value = i)
+                        resolver_setor(tabuleiro=clone)
+                        pre_cadeia(tabuleiro=clone, value = i)
+                        resolver_cell(tabuleiro = clone)
                         new_posicoes = listagem_numbers(setor = clone, value = i)
                         print(new_posicoes)
                         print(clone)
@@ -257,8 +272,7 @@ def cadeia_forcada(tabuleiro = tabuleiro):
                         estructure
                         counter = counter+1
                     #if (len(structure[str(posicoes[0])]) > 0 and len(structure[str(posicoes[0])]) > 0  )
-                    clone
-                    returners = [posicao for posicao in estructure[str(posicoes[0])] if posicao in estructure[str(posicoes[1])] and posicao not in posicoes]
+                    returners = [posicao for posicao in estructure[str(posicoes[0])] if posicao in estructure[str(posicoes[1])]]
                     if returners == []:
                         pass
                     else:
@@ -283,8 +297,10 @@ estructure[posicoes[1]]
 
 estr
 i = 5
-ind = 6
-ind_two = 0
+ind = 0
+ind_two = 3
+
+tabuleiro =np.copy( clone)
 
 pre_tabuleiro()
 
@@ -294,7 +310,7 @@ tabuleiro = atualize_matrix()
 tabuleiro
 cadeia_forcada()
 
-resolver_cell()
+resolver_cell(tabuleiro = tabuleiro)
 resolver_setor()
 
 pre_tabuleiro()
