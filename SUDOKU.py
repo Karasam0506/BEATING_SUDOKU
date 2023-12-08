@@ -415,13 +415,14 @@ def x_wings():
                                 y_value = filtering(pivot[2], y_wind[2] , tip = 'in')
                                 xy_wind = [vetor for vetor in list_rest if vetor[1] == x_wind[1] and vetor[0] == y_wind[0] ][0]
                                 xy_value = filtering(pivot[2], y_wind[2] , tip = 'in')
-                                if len(xy_wind[2])  > 0 :
+                                if len(xy_wind[2])  ==2  :
                                     for verify_value in pivot[2]:
                                         if( verify_value in y_value and verify_value in xy_value and verify_value in value_x ):
                                             for end_vector in list_rest:
                                                 coluns_to_drop  = [pivot[1], x_wind[1]]
                                                 if(end_vector not in [pivot, x_wind, y_wind, xy_wind ] and end_vector[1] in coluns_to_drop and verify_value in end_vector[2] ):
-                                                    #end_vector[2].remove(verify_value)
+                                                    print(pivot, x_wind, y_wind, xy_wind , end_vector)
+                                                    end_vector[2].remove(verify_value)
         ind += 1 
 
 
@@ -513,7 +514,7 @@ def xy_wings():
                                         (end_vector in x_lin or end_vector in x_col or end_vector in setor_x) and
                                         (end_vector in y_lin or end_vector in y_col or end_vector in setor_y)):
                                             print( pivot,  x_wind  ,y_wind , end_vector )
-                                            #end_vector[2].remove(y_no_value[0])
+                                            end_vector[2].remove(y_no_value[0])
         ind += 1
 
 def setor_com_faltantes(vec:list)-> list :
