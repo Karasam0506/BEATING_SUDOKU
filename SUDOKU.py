@@ -27,6 +27,38 @@ acceptable_list = [1,2,3,4,5,6,7,8,9]
 
 #tabuleiro == matrix_comp
 
+def decorate_matriz(func)-> None:
+    """Decorator que mostra se há alteração nos valores do tabuleiro após a alteração da função.
+    
+    Args:
+    func (func): Função que representa um método para resolução do sudoku.
+    
+    Returns:
+        None
+    """
+    @wraps(func)
+
+    def wrapper(**kwargs):
+        global tabuleiro
+        clone =np.copy( tabuleiro)
+        in_value = tabuleiro
+        for key , value in kwargs.items():
+            if isinstance(value, np.matrix):
+                clone =np.copy( kwargs)
+                in_value = value
+
+        zero_later = len(np.where(clone == 0)[0])
+
+        print(f'Células a serem preenchidas: {zero_later}')
+
+        func(**kwargs)
+
+        alteracoes = len(np.where(clone != in_value)[0])
+        zerados = len(np.where( in_value == 0)[0])
+        print('Método {}'.format(func.__name__))
+        print(f'Células preenchidas: {alteracoes}, Células a serem preenchidas: {zerados}') 
+    return wrapper
+
 def reten_lista(lo_setor ):
     if(type(   lo_setor  ) == list):
         return lo_setor
@@ -581,7 +613,10 @@ def resolver_rest(the_tabuleiro = None, the_rest = None) -> None:
     xy_wings(for_xy_wing=the_rest, great_tab= the_tabuleiro)
     for vetores in the_rest:
         if len(vetores[2]) == 1:
-            the_tabuleiro[vetores[0], vetores[1]] = vetores[2][0]
+            the_line =  [rest for rest in the_rest if (rest[0] == vetores[0] and rest[2] == vetores[2]) or (rest[1] == vetores[1] and rest[2] == vetores[2] )  ]
+            if len(the_line)>1:
+                pass
+            else: the_tabuleiro[vetores[0], vetores[1]] = vetores[2][0]
 
 def xy_wings(for_xy_wing = None, great_tab = None):
     """Aplicação do método xy_wing, nele é verificado se é possível encontrar 1 célula pivo, 1 asa na linha e uma 
@@ -656,35 +691,3 @@ def setor_com_faltantes(vec:list , tab_falt = None , great_rest = None)-> list :
             absolutes.append([rest for rest in great_rest if rest[0] == (obgs[0] + ind) and  rest[1] == (obgs[1] + ind_two) ][0])
     return absolutes
 
-
-def decorate_matriz(func)-> None:
-    """Decorator que mostra se há alteração nos valores do tabuleiro após a alteração da função.
-    
-    Args:
-    func (func): Função que representa um método para resolução do sudoku.
-    
-    Returns:
-        None
-    """
-    @wraps(func)
-
-    def wrapper(**kwargs):
-        global tabuleiro
-        clone =np.copy( tabuleiro)
-        in_value = tabuleiro
-        for key , value in kwargs.items():
-            if isinstance(value, np.matrix):
-                clone =np.copy( kwargs)
-                in_value = value
-
-        zero_later = len(np.where(clone == 0)[0])
-
-        print(f'Células a serem preenchidas: {zero_later}')
-
-        func(**kwargs)
-
-        alteracoes = len(np.where(clone != in_value)[0])
-        zerados = len(np.where( in_value == 0)[0])
-        print('Método {}'.format(func.__name__))
-        print(f'Células preenchidas: {alteracoes}, Células a serem preenchidas: {zerados}') 
-    return wrapper

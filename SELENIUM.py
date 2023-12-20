@@ -7,13 +7,14 @@ import numpy as np
 import time
 import fnmatch
 import random
-driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+from SUDOKU import resolver_cell, resolver_setor, resolver_rest, cadeia_forcada, pre_tabuleiro
+tabuleiro = None
 
+#driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 
-driver.get('https://www.sudokuonline.io/pt/impossivel')
+#driver.get('https://www.sudokuonline.io/pt/impossivel')
 
-
-def create_neveis() -> list:
+def create_neveis(driver) -> list:
     driver.find_element(By.XPATH,'//*[@id="puzzleDifficulty"]').click()
     nivel_atual = driver.find_element(By.XPATH,'//*[@id="puzzleDifficulty"]').text
     niveis = driver.find_element(By.XPATH,'//*[@id="game-header"]/div/div[1]/div/div').text.split('\n')
@@ -25,7 +26,7 @@ def transform_cell(la_string:str) -> int:
         return 0
     else: return int(la_string)
 
-def atualize_matrix():
+def atualize_matrix(driver):
     for rep in range(1, 82, 1):
         value =  driver.find_element(By.XPATH,f'//*[@id="sudoku"]/div[{rep}]').get_attribute('data-value')
         if(rep == 1):
@@ -35,25 +36,18 @@ def atualize_matrix():
     new_matrix = np.matrix(np.array(pre_matrix).reshape((9,9)))
     return new_matrix
 
-ind = 0
-ind_two = 0
-def global_input():
-    global tabuleiro
+
+def global_input(driver, tabuleiro):
     for ind in range(0, 9):
         for ind_two in range(0, 9 ):
             value = tabuleiro[ind, ind_two]
             if value > 0 :
                 cell  = driver.find_elements( By.XPATH , f'//*[@data-row="{ind}"]')[ind_two]
                 if cell.text == "":
-                    print(value)
                     cell.send_keys( str(value))
 
-value = 6
 
-
-
-def verify_button_erro():
-    global driver
+def verify_button_erro(driver):
     if fnmatch.fnmatch(driver.current_url , "https://www.sudokuonline.io/pt/*"):
         while len(driver.find_elements(By.XPATH, '//*[@class="custom-control-label change-image"]')   ) == 0:
             try :
@@ -61,16 +55,12 @@ def verify_button_erro():
                 time.sleep(1)
             except: time.sleep(2)
 
-driver.find_elements(By.XPATH, '//*[@class="custom-control-label change-image"]').click()
-
-tabuleiro = atualize_matrix()
-pre_tabuleiro()
+#driver.find_elements(By.XPATH, '//*[@class="custom-control-label change-image"]').click()
 
 
-
-def infinity_while():
+def infinity_while(driver):
     global tabuleiro
-    tabuleiro = atualize_matrix()
+    tabuleiro = atualize_matrix(driver = driver)
     def clonagem(tab = None):
         if tab is None:
             tab = tabuleiro
@@ -122,29 +112,37 @@ def infinity_while():
             if(hipotese_alteration ==rest_alteration and cell_alteration ==setor_alteration ):
                 error = 1
     pre_tabuleiro()
-    global_input()
+    global_input(driver= driver, tabuleiro= tabuleiro)
 
 
-infinity_while()
 
-pre_tabuleiro()
-resolver_cell()
-resto[0] = resolver_setor()
-resto = resolver_rest()
-cadeia_forcada()
+dont_stop('https://www.sudokuonline.io/pt/impossivel')
 
+def dont_stop(URL:str):
+    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+    driver.get(URL)
+    while len(driver.find_elements(By.XPATH, '//*[@id="logo"]')) ==0:
+        time.sleep(2)
+    else:
+        while True:
+            aleator = random.randint(1,4)
+            driver.find_element(By.XPATH,'//*[@id="puzzleDifficulty"]').click()
+            driver.find_element(By.XPATH, f'//*[@id="game-header"]/div/div[1]/div/div/a[{aleator}]').click()
+            time.sleep(5)
+            verify_button_erro(driver = driver)
+            infinity_while(driver= driver)
+            time.sleep(2)
+            sit= len(driver.find_elements(By.XPATH, '//*[@id="victory-screen"]'))
+            if sit ==1:
+                print("SUCCESS")
+            else: print("ERROR")
 
-tabuleiro
-driver
 
 driver.find_elements(By.XPATH, '//*[@id="victory-screen"]')
 
 aleator = random.randint(0,3)
-lita, atu = create_neveis()
 driver.find_element(By.XPATH,'//*[@id="puzzleDifficulty"]').click()
 driver.find_element(By.XPATH ,f"//*[contains(text(),'{lita[aleator]}')]").click()
 time.sleep(2)
 if len(driver.find_elements(By.XPATH, '//*[@id="submit_modal"]')) == 1 :
     driver.find_element(By.XPATH, '//*[@id="submit_modal"]').click()
-
-'//*[@id="victory-screen"]'
