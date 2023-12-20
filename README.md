@@ -15,34 +15,23 @@ Embora o Sudoku seja muitas vezes evitado devido à sua percebida complexidade, 
 
 
 
-## Objetivo
+## Objetivo/Método
 A complexidade do Sudoku varia de acordo com o nível do jogo, apresentando desafios crescentes. Compreendendo essa dinâmica, este projeto visa desenvolver uma solução capaz de resolver a maioria das configurações do tabuleiro de Sudoku. A intenção é criar uma ferramenta eficaz e versátil para a resolução automatizada desse quebra-cabeça, contribuindo para a experiência e aprendizado relacionados ao Sudoku.
 
-## Métodos
-Utilizaremos do Python para ser nosso motor de alterações dentro do tabuleiro. Inicialmente o processo tem os seguintes problemas 
+Utilizaremos o Python como nosso motor de alterações dentro do tabuleiro. Inicialmente, o processo apresenta os seguintes desafios:
 
-1. Criação da Variável para Números no Tabuleiro: Estabelecer uma estrutura de dados eficiente para armazenar os números no tabuleiro.
+1. Criação da Variável para Números no Tabuleiro: Estabelecer uma estrutura de dados eficiente para armazenar os números no tabuleiro: Utilizaremos o NumPy para criar uma matriz 9x9 que receberá os valores dispostos no tabuleiro de Sudoku. Na leitura inicial do tabuleiro, os espaços vazios são representados pelo valor '0', enquanto os demais valores são indicados pelos números de 1 a 9.
 
-2. Visualização Aprimorada do Tabuleiro: Desenvolver uma interface que proporcione uma visualização clara e amigável do tabuleiro.
+2. Visualização Aprimorada do Tabuleiro: Desenvolver uma visualização clara e amigável do tabuleiro: Para isso, foi criada uma função que imprime o tabuleiro 9x9, onde os valores por coluna são separados por '|' e por linha por '_', proporcionando uma visualização semelhante à disposição do tabuleiro.
 
-3. Implementação de Métodos para Definir Células Modificáveis: Aplicar métodos que permitam a identificação e modificação das células que podem ser alteradas.
+3. Implementação de Métodos para Definir Células Modificáveis: Aplicar métodos que permitam a identificação e modificação das células que podem ser alteradas. Foram utilizados diversos métodos, como x-wing, xy-wing, resolução por eliminação, resolução por eliminação no setor e cadeia forçada.
 
-4. Iteração dos Métodos até a Conclusão do Tabuleiro: Garantir a repetição eficaz dos métodos até que o tabuleiro esteja completamente resolvido.
+4. Iteração dos Métodos até a Conclusão do Tabuleiro: Garantir a repetição eficaz dos métodos até que o tabuleiro esteja completamente resolvido. Foi criada uma função que executa repetidamente os métodos de resolução do Sudoku até que o tabuleiro esteja totalmente preenchido ou os métodos não possam atribuir mais valores corretos ao tabuleiro.
 
-5. Acesso a uma Aplicação de Sudoku Online: Estabelecer uma conexão com um site que ofereça uma aplicação de Sudoku online.
+5. Acesso a uma Aplicação de Sudoku Online: Estabelecer uma conexão com um site que ofereça uma aplicação de Sudoku online. Foi escolhido o site 'https://sudoku.com/pt' para realizar as interações.
 
-6. Leitura de Dados do Tabuleiro Online: Desenvolver mecanismos para extrair dados do tabuleiro online de forma eficiente.
+6. Leitura de Dados do Tabuleiro Online: Desenvolver mecanismos eficientes para extrair dados do tabuleiro online. Foi criada uma função que lê o HTML do site e adiciona as informações ao tabuleiro.
 
 7. Interação com o Tabuleiro Online: Implementar funcionalidades que permitam interagir de forma coordenada com o tabuleiro online.
 
-8. Tratamento de Erros quando o Valor Indicado não Estiver Correto: Implementar um procedimento para lidar com situações em que os valores indicados pelo projeto não correspondem aos requisitos esperados.
-
-
-
-
-
-
-
-
-
-O python nos disponibiliza diversos pacotes que podem resolver diversos problemas, para a questão do tabuleiro 
+8. Tratamento de Erros quando o Valor Indicado não Estiver Correto: Implementar procedimentos para lidar com situações em que os valores indicados pelo projeto não correspondem aos requisitos esperados.
